@@ -1,5 +1,7 @@
 package com.informatica.hackathon.ShareKart.controller;
 
+import com.informatica.hackathon.ShareKart.exception.EmailValidator;
+import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.model.Profile;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,8 @@ public class ProfileManagementController {
 
     @RequestMapping(method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Profile> saveProfile(@RequestBody Profile profile) {
+    public ResponseEntity<Profile> saveProfile(@RequestBody Profile profile) throws InvalidRequestException {
+        EmailValidator.validateEmail(profile.getEmail());
         return new ResponseEntity<Profile>(profileService.saveProfile(profile), HttpStatus.CREATED);
     }
 
@@ -33,7 +36,8 @@ public class ProfileManagementController {
     @RequestMapping(value = "/{profileId}", method = RequestMethod.PUT,
             consumes = "application/json", produces = "application/json")
     public ResponseEntity<Profile> updateProfileById(@PathVariable(value = "profileId") String profileId,
-                                                     @RequestBody Profile profile) {
+                                                     @RequestBody Profile profile) throws InvalidRequestException {
+        EmailValidator.validateEmail(profile.getEmail());
         return new ResponseEntity<Profile>(profileService.updateProfile(profile, profileId), HttpStatus.OK);
     }
 

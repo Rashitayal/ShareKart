@@ -1,7 +1,8 @@
 package com.informatica.hackathon.ShareKart.exception;
 
-public class InvalidRequestException extends RuntimeException{
+public class InvalidRequestException extends RuntimeException {
     private String message;
+
     public InvalidRequestException(String message) {
         super(message);
         this.message = message;

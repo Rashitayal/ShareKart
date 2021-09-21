@@ -2,11 +2,16 @@ package com.informatica.hackathon.ShareKart.service.impl;
 
 import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.exception.ResourceNotFoundException;
+import com.informatica.hackathon.ShareKart.model.Gender;
 import com.informatica.hackathon.ShareKart.model.Profile;
+import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
 import com.informatica.hackathon.ShareKart.repository.ProfileRepository;
+import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -14,11 +19,48 @@ public class ProfileServiceImpl implements ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
 
+    @Autowired
+    private SubCategoryRepository subCategoryRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @Override
+    @Transactional
     public Profile saveProfile(Profile profile) {
         if (profileRepository.findProfileByEmail(profile.getEmail()) != null) {
             throw new InvalidRequestException(
                     String.format("%s with %s %s exists", "profile", "email", profile.getEmail()));
+        }
+        String genderLabel = Gender.valueOfLabel(profile.getGender().toLowerCase());
+        if (genderLabel == null) {
+            throw new InvalidRequestException(
+                    String.format("invalid value of gender '%s', genderLabel"));
+        }
+        profile.setGender(genderLabel);
+        if (profile.getLikesList().size() > 0) {
+            profile.getLikesList().stream().forEach(e -> {
+                        e.setProfile(profile);
+                        if (e.getSubCategory() != null) {
+                            e.setSubCategory(subCategoryRepository.findSubCatSubCatAndCatId(e.getSubCategory().getName(),
+                                    e.getSubCategory().getCategory().getName()));
+                        } else if (e.getCategory() != null) {
+                            e.setCategory(categoryRepository.findCatByCatId(e.getCategory().getName()));
+                        }
+                    }
+            );
+        }
+        if (profile.getDislikesList().size() > 0) {
+            profile.getDislikesList().stream().forEach(e -> {
+                        e.setProfile(profile);
+                        if (e.getSubCategory() != null) {
+                            e.setSubCategory(subCategoryRepository.findSubCatSubCatAndCatId(e.getSubCategory().getName(),
+                                    e.getSubCategory().getCategory().getName()));
+                        } else if (e.getCategory() != null) {
+                            e.setCategory(categoryRepository.findCatByCatId(e.getCategory().getName()));
+                        }
+                    }
+            );
         }
         return profileRepository.save(profile);
 
@@ -37,11 +79,36 @@ public class ProfileServiceImpl implements ProfileService {
     public Profile updateProfile(Profile profile, String profileId) {
         Profile p = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("profile", "profileId", profileId));
-        if (!profileRepository.findProfileByEmail(profile.getEmail()).getProfileId().equals(profileId)) {
+        Profile pByEmail = profileRepository.findProfileByEmail(profile.getEmail());
+        if (pByEmail != null && !pByEmail.getProfileId().equals(profileId)) {
             throw new InvalidRequestException(
                     String.format("%s with %s %s exists", "profile", "email", profile.getEmail()));
         }
         profile.setProfileId(profileId);
+        if (profile.getLikesList() != null && profile.getLikesList().size() > 0) {
+            profile.getLikesList().stream().forEach(e -> {
+                        e.setProfile(profile);
+                        if (e.getSubCategory() != null) {
+                            e.setSubCategory(subCategoryRepository.findSubCatSubCatAndCatId(e.getSubCategory().getName(),
+                                    e.getSubCategory().getCategory().getName()));
+                        } else if (e.getCategory() != null) {
+                            e.setCategory(categoryRepository.findCatByCatId(e.getCategory().getName()));
+                        }
+                    }
+            );
+        }
+        if (profile.getDislikesList() != null && profile.getDislikesList().size() > 0) {
+            profile.getDislikesList().stream().forEach(e -> {
+                        e.setProfile(profile);
+                        if (e.getSubCategory() != null) {
+                            e.setSubCategory(subCategoryRepository.findSubCatSubCatAndCatId(e.getSubCategory().getName(),
+                                    e.getSubCategory().getCategory().getName()));
+                        } else if (e.getCategory() != null) {
+                            e.setCategory(categoryRepository.findCatByCatId(e.getCategory().getName()));
+                        }
+                    }
+            );
+        }
         return profileRepository.save(profile);
     }
 

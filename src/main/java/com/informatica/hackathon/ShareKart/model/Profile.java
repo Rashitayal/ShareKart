@@ -1,17 +1,21 @@
 package com.informatica.hackathon.ShareKart.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Email;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "profile")
@@ -21,10 +25,7 @@ public class Profile {
     @Column(name = "profile_id")
     @GenericGenerator(name = "sequence_profile_id", strategy = "com.informatica.hackathon.ShareKart.model.generator.ProfileIdGenerator", parameters = @Parameter(name = "prefix", value = "P-"))
     @GeneratedValue(generator = "sequence_profile_id")
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private String profileId;
-
-    @Email
 
     private String email;
 
@@ -39,6 +40,17 @@ public class Profile {
     private String lastName;
 
     private Integer height;
+
+    @Column(name = "gender", nullable = false)
+    private String gender;
+
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    private List<Likes> likesList;
+
+    @JsonManagedReference
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
+    private List<DisLikes> dislikesList;
 
     public String getProfileId() {
         return profileId;
@@ -86,5 +98,29 @@ public class Profile {
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public List<Likes> getLikesList() {
+        return likesList;
+    }
+
+    public void setLikesList(List<Likes> likesList) {
+        this.likesList = likesList;
+    }
+
+    public List<DisLikes> getDislikesList() {
+        return dislikesList;
+    }
+
+    public void setDislikesList(List<DisLikes> dislikesList) {
+        this.dislikesList = dislikesList;
     }
 }
