@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.*;
+//import javax.validation.constraints.Email;
 import java.util.Date;
 import java.util.List;
 
@@ -25,8 +27,10 @@ public class Profile {
     @Column(name = "profile_id")
     @GenericGenerator(name = "sequence_profile_id", strategy = "com.informatica.hackathon.ShareKart.model.generator.ProfileIdGenerator", parameters = @Parameter(name = "prefix", value = "P-"))
     @GeneratedValue(generator = "sequence_profile_id")
+    //@GeneratedValue(strategy = GenerationType.AUTO)
     private String profileId;
 
+    //@Email
     private String email;
 
     @Column(name = "dob", nullable = false)
@@ -40,6 +44,10 @@ public class Profile {
     private String lastName;
 
     private Integer height;
+
+    @OneToMany(mappedBy = "profile")
+    private List<OrderHistory> orderHistoryList;
+
 
     @Column(name = "gender", nullable = false)
     private String gender;
