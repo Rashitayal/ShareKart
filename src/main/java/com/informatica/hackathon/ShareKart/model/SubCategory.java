@@ -29,8 +29,8 @@ public class SubCategory {
     private String name;
 
     @JsonBackReference
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_category_id", nullable = false)
+    @ManyToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @JsonManagedReference
@@ -40,6 +40,9 @@ public class SubCategory {
     @JsonManagedReference
     @OneToMany(mappedBy = "subCategory")
     private List<DisLikes> dislikesList;
+
+    @OneToMany(mappedBy = "subCategory")
+    private List<Product> productList;
 
     public int getId() {
         return id;
@@ -79,5 +82,12 @@ public class SubCategory {
 
     public void setDislikesList(List<DisLikes> dislikesList) {
         this.dislikesList = dislikesList;
+    }
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
     }
 }

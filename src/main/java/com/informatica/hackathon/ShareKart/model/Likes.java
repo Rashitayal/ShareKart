@@ -22,17 +22,17 @@ public class Likes {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_profile_id")
+    @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "fk_subCategory_id")
+    @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
     public int getId() {
