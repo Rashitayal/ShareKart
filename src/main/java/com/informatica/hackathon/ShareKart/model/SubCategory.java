@@ -28,16 +28,16 @@ public class SubCategory {
     @Column(name = "sub_cat_name")
     private String name;
 
-    @JsonBackReference
+    @JsonBackReference(value="category")
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="subCategory")
     @OneToMany(mappedBy = "subCategory")
     private List<Likes> likesList;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="subCategory")
     @OneToMany(mappedBy = "subCategory")
     private List<DisLikes> dislikesList;
 

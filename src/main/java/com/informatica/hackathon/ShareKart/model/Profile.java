@@ -45,18 +45,18 @@ public class Profile {
 
     private Integer height;
 
-    @OneToMany(mappedBy = "profile")
-    private List<OrderHistory> orderHistoryList;
+    /*@OneToMany(mappedBy = "profile")
+    private List<OrderHistory> orderHistoryList;*/
 
 
     @Column(name = "gender", nullable = false)
     private String gender;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="profile")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<Likes> likesList;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="profile")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<DisLikes> dislikesList;
 

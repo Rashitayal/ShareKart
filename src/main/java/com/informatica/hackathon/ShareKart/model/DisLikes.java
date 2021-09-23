@@ -20,17 +20,17 @@ public class DisLikes {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @JsonBackReference
+    @JsonBackReference(value="profile")
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @JsonBackReference
+    @JsonBackReference(value="category")
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category")
     private Category category;
 
-    @JsonBackReference
+    @JsonBackReference(value="subCategory")
     @ManyToOne
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;

@@ -3,7 +3,7 @@ package com.informatica.hackathon.ShareKart.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "connections")
+@Table(name = "orderHistory")
 public class OrderHistory {
     @Id
     @Column(name = "id")
