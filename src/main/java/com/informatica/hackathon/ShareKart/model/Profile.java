@@ -33,7 +33,7 @@ public class Profile {
     //@Email
     private String email;
 
-    @Column(name = "dob", nullable = false)
+    @Column(name = "dob")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
@@ -49,7 +49,7 @@ public class Profile {
     private List<OrderHistory> orderHistoryList;*/
 
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     private String gender;
 
     @JsonManagedReference(value="profile")
