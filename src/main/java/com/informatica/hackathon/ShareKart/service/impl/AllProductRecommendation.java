@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ProductRecommendation {
+public class AllProductRecommendation {
 
     @Autowired
     private SubCategoryRepository subCategoryRepository;
@@ -49,7 +49,7 @@ public class ProductRecommendation {
         return products;
     }
 
-    public List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
+    private List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
 
         List<Integer> products = new ArrayList<>();
         List<Integer> subcats = new ArrayList<>();
@@ -105,6 +105,13 @@ public class ProductRecommendation {
         //handle products also
         return searchProductId(dislikedCats, dislikedSubcats, null);
 
+    }
+
+    public List<Product> searchGeneral(String profileId) {
+        List<Integer> productsToExclude = new ArrayList<>();
+        productsToExclude.addAll(searchDislikedProductIds(profileId));
+        productsToExclude.addAll(searchLikedProductIds(profileId));
+        return productRepository.findProductsToExclude(productsToExclude);
     }
 
     //search by orderHistory

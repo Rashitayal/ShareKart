@@ -6,7 +6,7 @@ public class RecommendationResponse {
 
     private List<Product> orderHistory;
     private List<Product> likes;
-    private List<Product> remaining;
+    private List<Product> general;
 
     public List<Product> getOrderHistory() {
         return orderHistory;
@@ -24,11 +24,11 @@ public class RecommendationResponse {
         this.likes = likes;
     }
 
-    public List<Product> getRemaining() {
-        return remaining;
+    public List<Product> getGeneral() {
+        return general;
     }
 
-    public void setRemaining(List<Product> remaining) {
-        this.remaining = remaining;
+    public void setGeneral(List<Product> general) {
+        this.general = general;
     }
 }
