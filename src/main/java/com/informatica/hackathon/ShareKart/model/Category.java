@@ -25,15 +25,15 @@ public class Category {
     @Column(name = "category_name")
     private String name;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="category")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private List<SubCategory> subCategoryList;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="category")
     @OneToMany(mappedBy = "category")
     private List<Likes> likesList;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="category")
     @OneToMany(mappedBy = "category")
     private List<DisLikes> dislikesList;
 
