@@ -32,12 +32,11 @@ public class ProfileServiceImpl implements ProfileService {
             throw new InvalidRequestException(
                     String.format("%s with %s %s exists", "profile", "email", profile.getEmail()));
         }
-        String genderLabel = Gender.valueOfLabel(profile.getGender().toLowerCase());
-        if (genderLabel == null) {
-            throw new InvalidRequestException(
-                    String.format("invalid value of gender '%s', genderLabel"));
+        if (profile.getGender() != null) {
+            String genderLabel = Gender.valueOfLabel(profile.getGender().toLowerCase());
+            profile.setGender(genderLabel);
         }
-        profile.setGender(genderLabel);
+
         if (profile.getLikesList().size() > 0) {
             profile.getLikesList().stream().forEach(e -> {
                         e.setProfile(profile);
