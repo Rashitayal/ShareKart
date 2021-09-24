@@ -2,6 +2,7 @@ package com.informatica.hackathon.ShareKart.controller;
 
 import com.informatica.hackathon.ShareKart.exception.EmailValidator;
 import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
+import com.informatica.hackathon.ShareKart.model.Connection;
 import com.informatica.hackathon.ShareKart.model.Profile;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -47,6 +50,28 @@ public class ProfileManagementController {
             consumes = "application/json", produces = "application/json")
     public ResponseEntity<Profile> deleteProfileById(@PathVariable(value = "profileId") String profileId) {
         profileService.deleteProfile(profileId);
+        return new ResponseEntity<Profile>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/connections/{profileId}", method = RequestMethod.GET,
+            consumes = "application/json", produces = "application/json")
+    public ResponseEntity<List<Connection>> getConnectionsForProfile(@PathVariable(value = "profileId") String profileId) {
+        return new ResponseEntity<List<Connection>>(profileService.getConnectionsForProfile(profileId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/connections/{profileId}", method = RequestMethod.POST,
+            consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Profile> addConnectionsForProfile(@PathVariable(value = "profileId") String profileId,
+                                                     @RequestBody List<Integer> connectionIds) throws InvalidRequestException {
+        profileService.addConnectionsForProfile(profileId, connectionIds);
+        return new ResponseEntity<Profile>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{profileId}", method = RequestMethod.DELETE,
+            consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Profile> deleteConnectionsForProfile(@PathVariable(value = "profileId") String profileId,
+                                                               @RequestBody List<Integer> connectionIds) {
+        profileService.deleteConnectionsForProfile(profileId, connectionIds);
         return new ResponseEntity<Profile>(HttpStatus.OK);
     }
 
