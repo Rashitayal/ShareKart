@@ -74,33 +74,26 @@ public class AllProductRecommendation {
 
     public List<Product> searchRecommendationsByLikes(String profileId) {
 
-        List<Integer> subcats = new ArrayList<>();
-        List<Integer> cats = new ArrayList<>();
-
-        subcats.addAll(likesRepository.findSubcatIdByProfileId(profileId));
-        cats.addAll(likesRepository.findCatIdByProfileId(profileId));
+        List<Integer> subcats = new ArrayList<>(likesRepository.findSubcatIdByProfileId(profileId));
+        List<Integer> cats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
         //add product likes also
         return searchRecommendations(cats, subcats, null);
 
     }
 
     public List<Integer> searchLikedProductIds(String profileId) {
-        List<Integer> likedSubcats = new ArrayList<>();
-        List<Integer> likedCats = new ArrayList<>();
 
-        likedSubcats.addAll(likesRepository.findSubcatIdByProfileId(profileId));
-        likedCats.addAll(likesRepository.findCatIdByProfileId(profileId));
+        List<Integer> likedSubcats = new ArrayList<>(likesRepository.findSubcatIdByProfileId(profileId));
+        List<Integer> likedCats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
         return searchProductId(likedCats, likedSubcats, null);
     }
 
     public List<Integer> searchDislikedProductIds(String profileId) {
-        List<Integer> dislikedSubcats = new ArrayList<>();
-        List<Integer> dislikedCats = new ArrayList<>();
 
-        dislikedSubcats.addAll(dislikesRepository.findSubcatIdByProfileId(profileId));
-        dislikedCats.addAll(dislikesRepository.findCatIdByProfileId(profileId));
+        List<Integer> dislikedSubcats = new ArrayList<>(dislikesRepository.findSubcatIdByProfileId(profileId));
+        List<Integer> dislikedCats = new ArrayList<>(dislikesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
         return searchProductId(dislikedCats, dislikedSubcats, null);
