@@ -13,5 +13,5 @@ public interface ProfileService {
 
     void deleteProfile(String profileId);
 
-    List<Profile> getAllProfile();
+    List<Profile> getAllProfile(String profileId);
 }

@@ -52,10 +52,10 @@ public class ProfileManagementController {
         return new ResponseEntity<Profile>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getAllProfile", method = RequestMethod.GET,
+    @RequestMapping(value = "/getAllProfile/{profileId}", method = RequestMethod.GET,
             consumes = "application/json", produces = "application/json")
-    public ResponseEntity<List<Profile>> getAllProfile() throws InvalidRequestException {
-        return new ResponseEntity<>(profileService.getAllProfile(), HttpStatus.CREATED);
+    public ResponseEntity<List<Profile>> getAllProfile(@PathVariable(value = "profileId") String profileId) throws InvalidRequestException {
+        return new ResponseEntity<>(profileService.getAllProfile(profileId), HttpStatus.OK);
     }
 
 }

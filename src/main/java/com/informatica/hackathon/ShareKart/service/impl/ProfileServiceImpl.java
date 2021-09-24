@@ -131,8 +131,8 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public List<Profile> getAllProfile() {
-        return profileRepository.findAll();
+    public List<Profile> getAllProfile(String profileId) {
+        return profileRepository.getUnconnectedProfile(connectionRepository.findConnectionsIdsForProfile(profileId),profileId);
     }
 
 }
