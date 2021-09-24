@@ -16,12 +16,15 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.google.code.gson:gson:2.8.8'
+	implementation 'org.json:json:20171018'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.apache.commons:commons-lang3'
 	implementation group: 'commons-validator', name: 'commons-validator', version: '1.7'
 	implementation 'javax.validation:validation-api'
+	implementation 'com.squareup.okhttp3:okhttp:3.14.6'
 }
 
 test {
