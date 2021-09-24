@@ -1,5 +1,7 @@
 package com.informatica.hackathon.ShareKart.service.impl;
 
+import com.informatica.hackathon.ShareKart.model.DisLikes;
+import com.informatica.hackathon.ShareKart.model.Likes;
 import com.informatica.hackathon.ShareKart.model.Product;
 import com.informatica.hackathon.ShareKart.repository.DisLikesRepository;
 import com.informatica.hackathon.ShareKart.repository.LikesRepository;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,14 +75,14 @@ public class FilteredProductRecommendation {
         return products;
     }
 
-    public List<Product> searchRecommendationsByLikes(String profileId, String searchType, Integer searchId) {
+    public List<Product> searchRecommendationsByLikes(String profileId, String searchType, List<Integer> searchId) {
 
         if (searchType.equalsIgnoreCase("category")) {
-
-            if (likesRepository.findlikesByProfileIdAndCatId(profileId, searchId) != null) {
-                return searchRecommendations(Arrays.asList(searchId), null, null);
+            List<Likes> cats = likesRepository.findlikesByProfileIdAndCatId(profileId, searchId);
+            if (cats != null && cats.size() > 0) {
+                return searchRecommendations(searchId, null, null);
             } else {
-                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(Arrays.asList(searchId));
+                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
                     return searchRecommendations(null, result, null);
@@ -96,19 +97,19 @@ public class FilteredProductRecommendation {
 
         } else if (searchType.equalsIgnoreCase("subcategory")) {
 
-            List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, Arrays.asList(searchId));
+            List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
                 return searchRecommendations(null, result, null);
             } else {
                 List<Integer> resultnew = likesRepository.findlikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(Arrays.asList(searchId)));
+                        productRepository.findProductIds(searchId));
                 if (resultnew.size() > 0) {
                     return searchRecommendations(null, null, result);
                 }
             }
 
         } else if (searchType.equalsIgnoreCase("product")) {
-            List<Integer> result = likesRepository.findlikesByProfileIdAndProdId(profileId, Arrays.asList(searchId));
+            List<Integer> result = likesRepository.findlikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
                 return searchRecommendations(null, null, result);
             }
@@ -118,15 +119,16 @@ public class FilteredProductRecommendation {
 
     }
 
-    public List<Integer> searchLikedProductIds(String profileId, String searchType, Integer searchId) {
+    public List<Integer> searchLikedProductIds(String profileId, String searchType, List<Integer> searchId) {
         List<Integer> dislikedSubcats = new ArrayList<>();
         List<Integer> dislikedCats = new ArrayList<>();
 
         if (searchType.equalsIgnoreCase("category")) {
-            if (likesRepository.findlikesByProfileIdAndCatId(profileId, searchId) != null) {
-                return searchProductId(Arrays.asList(searchId), null, null);
+            List<Likes> cats = likesRepository.findlikesByProfileIdAndCatId(profileId, searchId);
+            if (cats != null && cats.size() > 0) {
+                return searchProductId(searchId, null, null);
             } else {
-                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(Arrays.asList(searchId));
+                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
                     return searchProductId(null, result, null);
@@ -142,12 +144,12 @@ public class FilteredProductRecommendation {
         } else if (searchType.equalsIgnoreCase("subcategory")) {
 
             List<Integer> result =
-                    likesRepository.findlikesByProfileIdAndSubCatId(profileId, Arrays.asList(searchId));
+                    likesRepository.findlikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
                 return searchProductId(null, result, null);
             } else {
                 List<Integer> resultnew = likesRepository.findlikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(Arrays.asList(searchId)));
+                        productRepository.findProductIds(searchId));
                 if (resultnew.size() > 0) {
                     return searchProductId(null, null, result);
                 }
@@ -155,7 +157,7 @@ public class FilteredProductRecommendation {
 
         } else if (searchType.equalsIgnoreCase("product")) {
             List<Integer> result =
-                    likesRepository.findlikesByProfileIdAndProdId(profileId, Arrays.asList(searchId));
+                    likesRepository.findlikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
                 return searchProductId(null, null, result);
             }
@@ -167,15 +169,16 @@ public class FilteredProductRecommendation {
 
     }
 
-    public List<Integer> searchDislikedProductIds(String profileId, String searchType, Integer searchId) {
+    public List<Integer> searchDislikedProductIds(String profileId, String searchType, List<Integer> searchId) {
         List<Integer> dislikedSubcats = new ArrayList<>();
         List<Integer> dislikedCats = new ArrayList<>();
 
         if (searchType.equalsIgnoreCase("category")) {
-            if (dislikesRepository.findDislikesByProfileIdAndCatId(profileId, searchId) != null) {
-                return searchProductId(Arrays.asList(searchId), null, null);
+            List<DisLikes> cats = dislikesRepository.findDislikesByProfileIdAndCatId(profileId, searchId);
+            if (cats != null && cats.size() > 0) {
+                return searchProductId(searchId, null, null);
             } else {
-                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(Arrays.asList(searchId));
+                List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = dislikesRepository.findDislikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
                     return searchProductId(null, result, null);
@@ -191,12 +194,12 @@ public class FilteredProductRecommendation {
         } else if (searchType.equalsIgnoreCase("subcategory")) {
 
             List<Integer> result =
-                    dislikesRepository.findDislikesByProfileIdAndSubCatId(profileId, Arrays.asList(searchId));
+                    dislikesRepository.findDislikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
                 return searchProductId(null, result, null);
             } else {
                 List<Integer> resultnew = dislikesRepository.findDislikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(Arrays.asList(searchId)));
+                        productRepository.findProductIds(searchId));
                 if (resultnew.size() > 0) {
                     return searchProductId(null, null, result);
                 }
@@ -204,7 +207,7 @@ public class FilteredProductRecommendation {
 
         } else if (searchType.equalsIgnoreCase("product")) {
             List<Integer> result =
-                    dislikesRepository.findDislikesByProfileIdAndProdId(profileId, Arrays.asList(searchId));
+                    dislikesRepository.findDislikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
                 return searchProductId(null, null, result);
             }
@@ -216,7 +219,7 @@ public class FilteredProductRecommendation {
 
     }
 
-    public List<Product> searchGeneral(String profileId, String type, Integer searchId) {
+    public List<Product> searchGeneral(String profileId, String type, List<Integer> searchId) {
         List<Integer> productsToExclude = new ArrayList<>();
         productsToExclude.addAll(searchDislikedProductIds(profileId, type, searchId));
         productsToExclude.addAll(searchLikedProductIds(profileId, type, searchId));

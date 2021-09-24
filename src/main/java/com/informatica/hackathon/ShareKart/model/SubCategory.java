@@ -41,6 +41,7 @@ public class SubCategory {
     @OneToMany(mappedBy = "subCategory")
     private List<DisLikes> dislikesList;
 
+    @JsonManagedReference(value="subCategory")
     @OneToMany(mappedBy = "subCategory")
     private List<Product> productList;
 

@@ -1,5 +1,6 @@
 package com.informatica.hackathon.ShareKart.factory;
 
+import com.informatica.hackathon.ShareKart.model.SearchInputResponse;
 import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
 import com.informatica.hackathon.ShareKart.repository.ProductRepository;
 import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 @Component
 public class SearchInputProcessor {
@@ -22,7 +22,11 @@ public class SearchInputProcessor {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public List<Integer> processInputString(String input) {
+    public SearchInputResponse processInputString(String input) {
+        //call luis and return search type and list of ids
+
+
+
         HashMap<String, String> searchToBe = new HashMap<>();
         searchToBe.put("butterscotch icecream", "product");
         searchToBe.put("cake", "subcategory");
@@ -32,12 +36,13 @@ public class SearchInputProcessor {
         searchToBe.put("iphone 13", "product");
         searchToBe.put("gadgets", "category");
         if (searchToBe.get(input).equals("product")) {
-            return productRepository.findProductsbyName(input);
+            return new SearchInputResponse("product", productRepository.findProductsbyName(input));
         } else if (searchToBe.get(input).equals("subcategory")) {
-            return productRepository.findProductIds(subCategoryRepository.findSubcatByName(input));
+            return new SearchInputResponse("subcategory",
+                    productRepository.findProductIds(subCategoryRepository.findSubcatByName(input)));
         } else if (searchToBe.get(input).equals("category")) {
-            return productRepository.findProductIds(subCategoryRepository
-                    .findSubcatByCatId(Arrays.asList(categoryRepository.findCatByCatId(input).getId())));
+            return new SearchInputResponse("category", productRepository.findProductIds(subCategoryRepository
+                    .findSubcatByCatId(Arrays.asList(categoryRepository.findCatByCatId(input).getId()))));
         }
         return null;
     }

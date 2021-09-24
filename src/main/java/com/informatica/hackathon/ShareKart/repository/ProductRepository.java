@@ -11,13 +11,13 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query("select p from Product p where p.subCategory.id IN :subCatId")
+    @Query("select p from Product p where p.subCategory.id IN (:subCatId)")
     List<Product> findProductBySubCatId(@Param("subCatId") List<Integer> subCatId);
 
     @Query("select p from Product p where p.id IN :prodId")
     List<Product> findProductById(@Param("prodId") List<Integer> prodId);
 
-    @Query("select p.id from Product p where p.subCategory.id IN :subCatId")
+    @Query("select p.id from Product p JOIN p.subCategory s where s.id IN :subCatId")
     List<Integer> findProductIds(@Param("subCatId") List<Integer> subCatId);
 
     @Query("select p from Product p where p.id NOT IN :prodId")

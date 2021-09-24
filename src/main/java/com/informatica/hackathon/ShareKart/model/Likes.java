@@ -1,9 +1,7 @@
 package com.informatica.hackathon.ShareKart.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,20 +18,25 @@ public class Likes {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @JsonBackReference(value="profile")
+    @JsonBackReference(value = "profile")
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
-    @JsonBackReference(value="category")
+    @JsonBackReference(value = "category")
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonBackReference(value="subCategory")
+    @JsonBackReference(value = "subCategory")
     @ManyToOne
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
+
+    @JsonBackReference(value = "product")
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
 
     public int getId() {
         return id;
@@ -65,5 +68,13 @@ public class Likes {
 
     public void setSubCategory(SubCategory subCategory) {
         this.subCategory = subCategory;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

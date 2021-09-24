@@ -16,13 +16,13 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     @Query("select l.category.id from Likes l where l.profile.id = :profileId")
     List<Integer> findCatIdByProfileId(@Param("profileId") String profileId);
 
-    @Query("select l from Likes l where l.profile.id = :profileId and l.category.id = catId")
-    Likes findlikesByProfileIdAndCatId(@Param("profileId") String profileId, @Param("catId") Integer catId);
+    @Query("select l from Likes l JOIN l.category c where l.profile.id = :profileId and c.id IN :catId")
+    List<Likes> findlikesByProfileIdAndCatId(@Param("profileId") String profileId, @Param("catId") List<Integer> catId);
 
-    @Query("select l.subcategory.id from Likes l where l.profile.id = :profileId and l.subCategory.id IN subCatId")
+    @Query("select s.id from Likes l JOIN l.subCategory s where l.profile.id = :profileId and s.id IN :subCatId")
     List<Integer> findlikesByProfileIdAndSubCatId(@Param("profileId") String profileId, @Param("subCatId") List<Integer> subCatId);
 
-    @Query("select l.product.id from Likes l where l.profile.id = :profileId and l.product.id IN prodId")
+    @Query("select p.id from Likes l JOIN l.product p where l.profile.id = :profileId and p.id IN :prodId")
     List<Integer> findlikesByProfileIdAndProdId(@Param("profileId") String profileId, @Param("prodId") List<Integer> prodId);
 
 }

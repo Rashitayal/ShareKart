@@ -1,6 +1,19 @@
 package com.informatica.hackathon.ShareKart.model;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -16,22 +29,29 @@ public class Product {
     @Column(name = "description")
     String description;
 
+    @Column(name = "display_name")
+    String displayName;
+
     @Column(name = "name")
     String name;
 
+    @Column(name = "img_url")
+    String imgUrl;
+
+    @JsonBackReference(value="subCategory")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
 
-    public Product() {
-    }
+    @JsonManagedReference(value = "product")
+    @OneToMany(mappedBy = "product")
+    private List<Likes> likesList;
 
-    public Product(String id, String price, String description, String name, SubCategory subCategory) {
-        this.id = id;
-        this.price = price;
-        this.description = description;
-        this.name = name;
-        this.subCategory = subCategory;
+    @JsonManagedReference(value = "product")
+    @OneToMany(mappedBy = "product")
+    private List<DisLikes> dislikesList;
+
+    public Product() {
     }
 
     public String getId() {
@@ -72,5 +92,37 @@ public class Product {
 
     public void setSubCategory(SubCategory subCategory) {
         this.subCategory = subCategory;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public List<Likes> getLikesList() {
+        return likesList;
+    }
+
+    public void setLikesList(List<Likes> likesList) {
+        this.likesList = likesList;
+    }
+
+    public List<DisLikes> getDislikesList() {
+        return dislikesList;
+    }
+
+    public void setDislikesList(List<DisLikes> dislikesList) {
+        this.dislikesList = dislikesList;
     }
 }
