@@ -4,9 +4,7 @@ import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.exception.ResourceNotFoundException;
 import com.informatica.hackathon.ShareKart.model.Gender;
 import com.informatica.hackathon.ShareKart.model.Profile;
-import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
-import com.informatica.hackathon.ShareKart.repository.ProfileRepository;
-import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
+import com.informatica.hackathon.ShareKart.repository.*;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,15 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
+
+    @Autowired
+    private DisLikesRepository dislikesRepository;
+
+    @Autowired
+    private ConnectionRepository connectionRepository;
 
     @Override
     @Transactional
@@ -85,6 +92,10 @@ public class ProfileServiceImpl implements ProfileService {
                     String.format("%s with %s %s exists", "profile", "email", profile.getEmail()));
         }
         profile.setProfileId(profileId);
+
+        likesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
+        dislikesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
+
         if (profile.getLikesList() != null && profile.getLikesList().size() > 0) {
             profile.getLikesList().stream().forEach(e -> {
                         e.setProfile(profile);
