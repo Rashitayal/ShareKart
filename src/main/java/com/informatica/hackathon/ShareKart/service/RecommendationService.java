@@ -28,10 +28,10 @@ public class RecommendationService {
     }
 
     public RecommendationResponse filterRecommendation(String searchInput, String profileId){
-        chocolate cake -> product = 5,
+      /*  chocolate cake -> product = 5,
                 cake = subcategory = 1
                 food = category= 1
-        chocolate brownie -> <product>
+        chocolate brownie -> <product>*/
 
         //process searchInput to find categoryId/ subCategoryId/ productId user is looking for
 
