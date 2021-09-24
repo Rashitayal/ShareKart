@@ -1,10 +1,11 @@
 package com.informatica.hackathon.ShareKart.repository;
 
 import com.informatica.hackathon.ShareKart.model.DisLikes;
-import com.informatica.hackathon.ShareKart.model.Likes;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,4 +26,8 @@ public interface DisLikesRepository extends JpaRepository<DisLikes, Integer>  {
     @Query("select p.id from DisLikes dl JOIN dl.product p where dl.profile.id = :profileId and p.id IN :prodId")
     List<Integer> findDislikesByProfileIdAndProdId(@Param("profileId") String profileId, @Param("prodId") List<Integer> prodId);
 
+    @Modifying
+    @Transactional
+    @Query("delete from DisLikes dl where dl.profile.id = :profileId and (dl.category.id is not null or dl.subCategory.id is not null)")
+    int clearCategorySubCategoryByProfileId(@Param("profileId") String profileId);
 }
