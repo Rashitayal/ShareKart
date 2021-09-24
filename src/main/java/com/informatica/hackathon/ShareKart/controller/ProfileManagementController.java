@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1/profile")
@@ -48,6 +50,12 @@ public class ProfileManagementController {
     public ResponseEntity<Profile> deleteProfileById(@PathVariable(value = "profileId") String profileId) {
         profileService.deleteProfile(profileId);
         return new ResponseEntity<Profile>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getAllProfile", method = RequestMethod.GET,
+            consumes = "application/json", produces = "application/json")
+    public ResponseEntity<List<Profile>> getAllProfile() throws InvalidRequestException {
+        return new ResponseEntity<>(profileService.getAllProfile(), HttpStatus.CREATED);
     }
 
 }

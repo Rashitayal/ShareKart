@@ -18,7 +18,7 @@ public class ConnectionServiceImpl {
         return connectionRepository.findConnectionsForProfile(id);
     }
 
-    public Connection saveConnection(Connection connection){
-        return connectionRepository.save(connection);
+    public List<Connection> saveConnection(List<Connection> connection){
+        return connectionRepository.saveAll(connection);
     }
 }

@@ -29,8 +29,8 @@ public class ConnectionController {
 
     @RequestMapping(method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Connection> saveConnection(@RequestBody Connection connection) throws InvalidRequestException {
-        return new ResponseEntity<Connection>(connectionService.saveConnection(connection), HttpStatus.CREATED);
+    public ResponseEntity<List<Connection>> saveConnection(@RequestBody List<Connection> connection) throws InvalidRequestException {
+        return new ResponseEntity<List<Connection>>(connectionService.saveConnection(connection), HttpStatus.CREATED);
     }
 
 }

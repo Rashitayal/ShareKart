@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -116,6 +117,11 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("profile", "profileId", profileId));
         profileRepository.deleteById(profileId);
+    }
+
+    @Override
+    public List<Profile> getAllProfile() {
+        return profileRepository.findAll();
     }
 
 }
