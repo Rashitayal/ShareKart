@@ -60,6 +60,14 @@ public class Profile {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "profile")
     private List<DisLikes> dislikesList;
 
+    @JsonManagedReference(value="profileto")
+    @OneToMany(mappedBy = "to")
+    private List<Connection> connectedTo;
+
+    @JsonManagedReference(value="profilefrom")
+    @OneToMany(mappedBy = "from")
+    private List<Connection> connectedFrom;
+
     public String getProfileId() {
         return profileId;
     }
@@ -130,5 +138,21 @@ public class Profile {
 
     public void setDislikesList(List<DisLikes> dislikesList) {
         this.dislikesList = dislikesList;
+    }
+
+    public List<Connection> getConnectedTo() {
+        return connectedTo;
+    }
+
+    public void setConnectedTo(List<Connection> connectedTo) {
+        this.connectedTo = connectedTo;
+    }
+
+    public List<Connection> getConnectedFrom() {
+        return connectedFrom;
+    }
+
+    public void setConnectedFrom(List<Connection> connectedFrom) {
+        this.connectedFrom = connectedFrom;
     }
 }

@@ -16,17 +16,6 @@ public class Relation {
     @Column(name = "relation_name")
     String name;
 
-    @OneToMany(mappedBy = "relation")
-    private List<Connection> connections = new ArrayList<>();
-
-    public Relation() {
-    }
-
-    public Relation(String id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
     public String getId() {
         return id;
     }

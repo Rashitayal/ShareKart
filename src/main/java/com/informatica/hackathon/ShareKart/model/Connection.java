@@ -1,5 +1,7 @@
 package com.informatica.hackathon.ShareKart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -8,35 +10,23 @@ public class Connection {
     @Id
     @Column(name = "connection_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    String id;
+    Integer id;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @JsonBackReference(value = "profilefrom")
+    @ManyToOne
     @JoinColumn(name = "from_id", nullable = false)
     Profile from;
 
-    @ManyToOne(cascade= CascadeType.ALL)
+    @JsonBackReference(value = "profileto")
+    @ManyToOne
     @JoinColumn(name = "to_id", nullable = false)
     Profile to;
 
-    @ManyToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name = "relation_id", nullable = false)
-    Relation relation;
-
-    public Connection() {
-    }
-
-    public Connection(String id, Profile from, Profile to, Relation relation) {
-        this.id = id;
-        this.from = from;
-        this.to = to;
-        this.relation = relation;
-    }
-
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -56,11 +46,4 @@ public class Connection {
         this.to = to;
     }
 
-    public Relation getRelation() {
-        return relation;
-    }
-
-    public void setRelation(Relation relation) {
-        this.relation = relation;
-    }
 }
