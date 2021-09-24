@@ -2,16 +2,17 @@ package com.informatica.hackathon.ShareKart.service.impl;
 
 import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.exception.ResourceNotFoundException;
+import com.informatica.hackathon.ShareKart.model.Connection;
 import com.informatica.hackathon.ShareKart.model.Gender;
 import com.informatica.hackathon.ShareKart.model.Profile;
-import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
-import com.informatica.hackathon.ShareKart.repository.ProfileRepository;
-import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
+import com.informatica.hackathon.ShareKart.model.Relation;
+import com.informatica.hackathon.ShareKart.repository.*;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -24,6 +25,15 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
+
+    @Autowired
+    private DisLikesRepository dislikesRepository;
+
+    @Autowired
+    private ConnectionRepository connectionRepository;
 
     @Override
     @Transactional
@@ -84,6 +94,10 @@ public class ProfileServiceImpl implements ProfileService {
                     String.format("%s with %s %s exists", "profile", "email", profile.getEmail()));
         }
         profile.setProfileId(profileId);
+
+        likesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
+        dislikesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
+
         if (profile.getLikesList() != null && profile.getLikesList().size() > 0) {
             profile.getLikesList().stream().forEach(e -> {
                         e.setProfile(profile);
@@ -116,6 +130,31 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("profile", "profileId", profileId));
         profileRepository.deleteById(profileId);
+    }
+
+    @Override
+    public List<Connection> getConnectionsForProfile(String profileId) {
+        return connectionRepository.findConnectionsForProfile(profileId);
+    }
+
+    @Transactional
+    @Override
+    public void addConnectionsForProfile(String profileId, List<Integer> connectionIds) {
+        for (Integer connectionId: connectionIds) {
+            Profile from = new Profile();
+            from.setProfileId(profileId);
+            Profile to = new Profile();
+            to.setProfileId(String.valueOf(connectionId));
+            Relation relation = new Relation("1", null);
+            Connection connection = new Connection(null, from, to, relation);
+            connectionRepository.save(connection);
+        }
+    }
+
+    @Transactional
+    @Override
+    public void deleteConnectionsForProfile(String profileId, List<Integer> connectionIds) {
+
     }
 
 }
