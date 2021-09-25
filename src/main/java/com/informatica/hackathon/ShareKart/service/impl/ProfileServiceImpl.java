@@ -46,7 +46,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setGender(genderLabel);
         }
 
-        if (profile.getLikesList().size() > 0) {
+        if (profile.getLikesList()!= null && profile.getLikesList().size() > 0) {
             profile.getLikesList().stream().forEach(e -> {
                         e.setProfile(profile);
                         if (e.getSubCategory() != null) {
@@ -58,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
                     }
             );
         }
-        if (profile.getDislikesList().size() > 0) {
+        if (profile.getDislikesList()!= null && profile.getDislikesList().size() > 0) {
             profile.getDislikesList().stream().forEach(e -> {
                         e.setProfile(profile);
                         if (e.getSubCategory() != null) {
