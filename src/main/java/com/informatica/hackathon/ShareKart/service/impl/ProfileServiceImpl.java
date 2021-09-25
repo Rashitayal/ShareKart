@@ -94,6 +94,10 @@ public class ProfileServiceImpl implements ProfileService {
         }
         profile.setProfileId(profileId);
 
+        if (profile.getGender() != null) {
+            String genderLabel = Gender.valueOfLabel(profile.getGender().toLowerCase());
+            profile.setGender(genderLabel);
+        }
         likesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
         dislikesRepository.clearCategorySubCategoryByProfileId(profile.getProfileId());
 
