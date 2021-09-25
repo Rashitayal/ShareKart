@@ -20,7 +20,7 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     @Query("select l from Likes l JOIN l.category c where l.profile.id = :profileId and c.id IN :catId")
     List<Likes> findlikesByProfileIdAndCatId(@Param("profileId") String profileId, @Param("catId") List<Integer> catId);
 
-    @Query("select s.id from Likes l JOIN l.subCategory s where l.profile.id = :profileId and s.id IN :subCatId")
+    @Query("select distinct s.id from Likes l JOIN l.subCategory s where l.profile.id = :profileId and s.id IN :subCatId")
     List<Integer> findlikesByProfileIdAndSubCatId(@Param("profileId") String profileId, @Param("subCatId") List<Integer> subCatId);
 
     @Query("select p.id from Likes l JOIN l.product p where l.profile.id = :profileId and p.id IN :prodId")

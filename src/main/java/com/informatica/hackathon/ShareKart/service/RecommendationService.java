@@ -36,7 +36,7 @@ public class RecommendationService {
         //process searchInput to find categoryId/ subCategoryId/ productId user is looking for
 
         //find method in searchInputProcessor.processInputString
-        SearchInputResponse searchInputResponse = searchInputProcessor.processInputString(searchInput);
+        SearchInputResponse searchInputResponse = searchInputProcessor.processInputString(searchInput, profileId);
 
         List<Product> likedList = filteredProductRecommendation
                 .searchRecommendationsByLikes(profileId, searchInputResponse.getSearchType(),

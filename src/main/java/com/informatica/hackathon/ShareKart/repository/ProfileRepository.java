@@ -13,4 +13,7 @@ public interface ProfileRepository extends JpaRepository<Profile, String> {
     @Query("select p from Profile p where p.email = :email")
     Profile findProfileByEmail(@Param("email") String email);
 
+    @Query("select p.gender from Profile p where p.id = :profileId")
+    String getGenderForProfile(@Param("profileId") String profileId);
+
 }

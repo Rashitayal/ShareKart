@@ -3,6 +3,7 @@ package com.informatica.hackathon.ShareKart.factory;
 import com.informatica.hackathon.ShareKart.model.SearchInputResponse;
 import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
 import com.informatica.hackathon.ShareKart.repository.ProductRepository;
+import com.informatica.hackathon.ShareKart.repository.ProfileRepository;
 import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,13 +29,16 @@ public class SearchInputProcessor {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public SearchInputResponse processInputString(String input) {
+    @Autowired
+    private ProfileRepository profileRepository;
+
+    public SearchInputResponse processInputString(String input, String profileId) {
         //call luis and return search type and list of ids
 
 //        String url = "https://australiaeast.api.cognitive.microsoft.com/luis/prediction/v3.0/apps/9bb381a3-3ed5-43a7-af98-6c035413ade4/slots/staging/predict?subscription-key=e600a20e460d404dae030e7c953cb1a9&verbose=true&query="+input;
 //        String itemType = sendGetRequest(url);
 
-        input = input.toLowerCase(Locale.ROOT);
+        //input = input.toLowerCase(Locale.ROOT);
         HashMap<String, String> searchToBe = new HashMap<>();
         searchToBe.put("butterscotch icecream", "product");
         searchToBe.put("cake", "subcategory");
@@ -43,14 +47,18 @@ public class SearchInputProcessor {
         searchToBe.put("smartphone", "subcategory");
         searchToBe.put("iphone 13", "product");
         searchToBe.put("gadgets", "category");
+        searchToBe.put("Saree", "product");
+        searchToBe.put("Ethnic", "subcategory");
+        searchToBe.put("Fashion", "category");
+
         if (searchToBe.get(input).equals("product")) {
-            return new SearchInputResponse("product", productRepository.findProductsbyName(input));
+            return new SearchInputResponse("product", productRepository.findProductsbyName(input, profileRepository.getGenderForProfile(profileId)));
         } else if (searchToBe.get(input).equals("subcategory")) {
-            return new SearchInputResponse("subcategory",
-                    productRepository.findProductIds(subCategoryRepository.findSubcatByName(input)));
+            return new SearchInputResponse("subcategory",subCategoryRepository.findSubcatByName(input));
+                    //productRepository.findProductIds(subCategoryRepository.findSubcatByName(input), profileRepository.getGenderForProfile(profileId)));
         } else if (searchToBe.get(input).equals("category")) {
             return new SearchInputResponse("category", productRepository.findProductIds(subCategoryRepository
-                    .findSubcatByCatId(Arrays.asList(categoryRepository.findCatByCatId(input).getId()))));
+                    .findSubcatByCatId(Arrays.asList(categoryRepository.findCatByCatId(input).getId())),profileRepository.getGenderForProfile(profileId)));
         }
         return null;
     }

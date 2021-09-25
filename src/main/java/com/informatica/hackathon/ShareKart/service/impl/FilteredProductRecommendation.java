@@ -3,10 +3,7 @@ package com.informatica.hackathon.ShareKart.service.impl;
 import com.informatica.hackathon.ShareKart.model.DisLikes;
 import com.informatica.hackathon.ShareKart.model.Likes;
 import com.informatica.hackathon.ShareKart.model.Product;
-import com.informatica.hackathon.ShareKart.repository.DisLikesRepository;
-import com.informatica.hackathon.ShareKart.repository.LikesRepository;
-import com.informatica.hackathon.ShareKart.repository.ProductRepository;
-import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
+import com.informatica.hackathon.ShareKart.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +26,10 @@ public class FilteredProductRecommendation {
     @Autowired
     private DisLikesRepository dislikesRepository;
 
-    public List<Product> searchRecommendations(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
+    @Autowired
+    private ProfileRepository profileRepository;
+
+    public List<Product> searchRecommendations(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId, String gender) {
 
         List<Product> products = new ArrayList<>();
         List<Integer> subcats = new ArrayList<>();
@@ -42,17 +42,17 @@ public class FilteredProductRecommendation {
         }
 
         if (subcats.size() > 0) {
-            products.addAll(productRepository.findProductBySubCatId(subcats));
+            products.addAll(productRepository.findProductBySubCatId(subcats, gender));
         }
 
         if (prodId != null && prodId.size() > 0) {
-            products.addAll(productRepository.findProductById(prodId));
+            products.addAll(productRepository.findProductById(prodId, gender));
         }
 
         return products;
     }
 
-    private List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
+    private List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId, String gender) {
 
         List<Integer> products = new ArrayList<>();
         List<Integer> subcats = new ArrayList<>();
@@ -65,7 +65,7 @@ public class FilteredProductRecommendation {
         }
 
         if (subcats.size() > 0) {
-            products.addAll(productRepository.findProductIds(subcats));
+            products.addAll(productRepository.findProductIds(subcats, gender));
         }
 
         if (prodId != null && prodId.size() > 0) {
@@ -80,17 +80,17 @@ public class FilteredProductRecommendation {
         if (searchType.equalsIgnoreCase("category")) {
             List<Likes> cats = likesRepository.findlikesByProfileIdAndCatId(profileId, searchId);
             if (cats != null && cats.size() > 0) {
-                return searchRecommendations(searchId, null, null);
+                return searchRecommendations(searchId, null, null, profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
-                    return searchRecommendations(null, result, null);
+                    return searchRecommendations(null, result, null, profileRepository.getGenderForProfile(profileId));
                 } else {
                     List<Integer> resultnew = likesRepository
-                            .findlikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats));
+                            .findlikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats, profileRepository.getGenderForProfile(profileId)));
                     if (resultnew.size() > 0) {
-                        return searchRecommendations(null, null, result);
+                        return searchRecommendations(null, null, result, profileRepository.getGenderForProfile(profileId));
                     }
                 }
             }
@@ -99,19 +99,19 @@ public class FilteredProductRecommendation {
 
             List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
-                return searchRecommendations(null, result, null);
+                return searchRecommendations(null, result, null, profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> resultnew = likesRepository.findlikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(searchId));
+                        productRepository.findProductIds(searchId, profileRepository.getGenderForProfile(profileId)));
                 if (resultnew.size() > 0) {
-                    return searchRecommendations(null, null, result);
+                    return searchRecommendations(null, null, result, profileRepository.getGenderForProfile(profileId));
                 }
             }
 
         } else if (searchType.equalsIgnoreCase("product")) {
             List<Integer> result = likesRepository.findlikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
-                return searchRecommendations(null, null, result);
+                return searchRecommendations(null, null, result, profileRepository.getGenderForProfile(profileId));
             }
         }
 
@@ -126,17 +126,17 @@ public class FilteredProductRecommendation {
         if (searchType.equalsIgnoreCase("category")) {
             List<Likes> cats = likesRepository.findlikesByProfileIdAndCatId(profileId, searchId);
             if (cats != null && cats.size() > 0) {
-                return searchProductId(searchId, null, null);
+                return searchProductId(searchId, null, null,  profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = likesRepository.findlikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
-                    return searchProductId(null, result, null);
+                    return searchProductId(null, result, null,  profileRepository.getGenderForProfile(profileId));
                 } else {
                     List<Integer> resultnew = likesRepository
-                            .findlikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats));
+                            .findlikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats,  profileRepository.getGenderForProfile(profileId)));
                     if (resultnew.size() > 0) {
-                        return searchProductId(null, null, resultnew);
+                        return searchProductId(null, null, resultnew,  profileRepository.getGenderForProfile(profileId));
                     }
                 }
             }
@@ -146,12 +146,12 @@ public class FilteredProductRecommendation {
             List<Integer> result =
                     likesRepository.findlikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
-                return searchProductId(null, result, null);
+                return searchProductId(null, result, null,  profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> resultnew = likesRepository.findlikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(searchId));
+                        productRepository.findProductIds(searchId,  profileRepository.getGenderForProfile(profileId)));
                 if (resultnew.size() > 0) {
-                    return searchProductId(null, null, result);
+                    return searchProductId(null, null, result,  profileRepository.getGenderForProfile(profileId));
                 }
             }
 
@@ -159,7 +159,7 @@ public class FilteredProductRecommendation {
             List<Integer> result =
                     likesRepository.findlikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
-                return searchProductId(null, null, result);
+                return searchProductId(null, null, result,  profileRepository.getGenderForProfile(profileId));
             }
         }
 
@@ -176,17 +176,17 @@ public class FilteredProductRecommendation {
         if (searchType.equalsIgnoreCase("category")) {
             List<DisLikes> cats = dislikesRepository.findDislikesByProfileIdAndCatId(profileId, searchId);
             if (cats != null && cats.size() > 0) {
-                return searchProductId(searchId, null, null);
+                return searchProductId(searchId, null, null,  profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> subcats = subCategoryRepository.findSubcatByCatId(searchId);
                 List<Integer> result = dislikesRepository.findDislikesByProfileIdAndSubCatId(profileId, subcats);
                 if (result.size() > 0) {
-                    return searchProductId(null, result, null);
+                    return searchProductId(null, result, null,  profileRepository.getGenderForProfile(profileId));
                 } else {
                     List<Integer> resultnew = dislikesRepository
-                            .findDislikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats));
+                            .findDislikesByProfileIdAndProdId(profileId, productRepository.findProductIds(subcats,  profileRepository.getGenderForProfile(profileId)));
                     if (resultnew.size() > 0) {
-                        return searchProductId(null, null, resultnew);
+                        return searchProductId(null, null, resultnew,  profileRepository.getGenderForProfile(profileId));
                     }
                 }
             }
@@ -196,12 +196,12 @@ public class FilteredProductRecommendation {
             List<Integer> result =
                     dislikesRepository.findDislikesByProfileIdAndSubCatId(profileId, searchId);
             if (result.size() > 0) {
-                return searchProductId(null, result, null);
+                return searchProductId(null, result, null,  profileRepository.getGenderForProfile(profileId));
             } else {
                 List<Integer> resultnew = dislikesRepository.findDislikesByProfileIdAndProdId(profileId,
-                        productRepository.findProductIds(searchId));
+                        productRepository.findProductIds(searchId,  profileRepository.getGenderForProfile(profileId)));
                 if (resultnew.size() > 0) {
-                    return searchProductId(null, null, result);
+                    return searchProductId(null, null, result,  profileRepository.getGenderForProfile(profileId));
                 }
             }
 
@@ -209,7 +209,7 @@ public class FilteredProductRecommendation {
             List<Integer> result =
                     dislikesRepository.findDislikesByProfileIdAndProdId(profileId, searchId);
             if (result.size() > 0) {
-                return searchProductId(null, null, result);
+                return searchProductId(null, null, result,  profileRepository.getGenderForProfile(profileId));
             }
         }
 

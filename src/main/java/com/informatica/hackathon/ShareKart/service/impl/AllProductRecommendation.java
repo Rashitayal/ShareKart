@@ -1,10 +1,7 @@
 package com.informatica.hackathon.ShareKart.service.impl;
 
 import com.informatica.hackathon.ShareKart.model.Product;
-import com.informatica.hackathon.ShareKart.repository.DisLikesRepository;
-import com.informatica.hackathon.ShareKart.repository.LikesRepository;
-import com.informatica.hackathon.ShareKart.repository.ProductRepository;
-import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
+import com.informatica.hackathon.ShareKart.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +23,10 @@ public class AllProductRecommendation {
     @Autowired
     private DisLikesRepository dislikesRepository;
 
-    public List<Product> searchRecommendations(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
+    @Autowired
+    private ProfileRepository profileRepository;
+
+    public List<Product> searchRecommendations(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId, String gender) {
 
         List<Product> products = new ArrayList<>();
         List<Integer> subcats = new ArrayList<>();
@@ -39,17 +39,17 @@ public class AllProductRecommendation {
         }
 
         if (subcats.size() > 0) {
-            products.addAll(productRepository.findProductBySubCatId(subcats));
+            products.addAll(productRepository.findProductBySubCatId(subcats, gender));
         }
 
         if (prodId != null && prodId.size() > 0) {
-            products.addAll(productRepository.findProductById(prodId));
+            products.addAll(productRepository.findProductById(prodId, gender));
         }
 
         return products;
     }
 
-    private List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId) {
+    private List<Integer> searchProductId(List<Integer> catId, List<Integer> subCatId, List<Integer> prodId, String gender) {
 
         List<Integer> products = new ArrayList<>();
         List<Integer> subcats = new ArrayList<>();
@@ -62,7 +62,7 @@ public class AllProductRecommendation {
         }
 
         if (subcats.size() > 0) {
-            products.addAll(productRepository.findProductIds(subcats));
+            products.addAll(productRepository.findProductIds(subcats, gender));
         }
 
         if (prodId != null && prodId.size() > 0) {
@@ -77,7 +77,7 @@ public class AllProductRecommendation {
         List<Integer> subcats = new ArrayList<>(likesRepository.findSubcatIdByProfileId(profileId));
         List<Integer> cats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
         //add product likes also
-        return searchRecommendations(cats, subcats, null);
+        return searchRecommendations(cats, subcats, null, profileRepository.getGenderForProfile(profileId));
 
     }
 
@@ -87,7 +87,7 @@ public class AllProductRecommendation {
         List<Integer> likedCats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
-        return searchProductId(likedCats, likedSubcats, null);
+        return searchProductId(likedCats, likedSubcats, null, profileRepository.getGenderForProfile(profileId));
     }
 
     public List<Integer> searchDislikedProductIds(String profileId) {
@@ -96,7 +96,7 @@ public class AllProductRecommendation {
         List<Integer> dislikedCats = new ArrayList<>(dislikesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
-        return searchProductId(dislikedCats, dislikedSubcats, null);
+        return searchProductId(dislikedCats, dislikedSubcats, null, profileRepository.getGenderForProfile(profileId));
 
     }
 

@@ -1,11 +1,22 @@
-INSERT INTO category (category_id, category_name) VALUES (1,'food');
-INSERT INTO category (category_id, category_name) VALUES (2,'clothing');
-INSERT INTO category (category_id, category_name) VALUES (3,'flowers');
-INSERT INTO category (category_id, category_name) VALUES (4,'gadgets');
+INSERT INTO category (category_id, category_name) VALUES (1,'Food');
+INSERT INTO category (category_id, category_name) VALUES (2,'Fashion');
+INSERT INTO category (category_id, category_name) VALUES (3,'Flowers');
+INSERT INTO category (category_id, category_name) VALUES (4,'Gadgets');
+INSERT INTO category (category_id, category_name) VALUES (5,'Accessories');
 
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (1,1,'cakes');
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (2,1,'sweets');
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (3,1,'icecreams');
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (4,1,'shakes');
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (5,2,'western');
-INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (6,2,'ethnic');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (1,1,'Cakes');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (2,1,'Ice Creams');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (3,1,'Shakes');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (4,1,'Sweets');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (5,2,'Western');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (6,2,'Ethnic');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (7,3,'Orchids');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (8,3,'Roses');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (9,3,'Tulips');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (10,4,'Mobiles');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (11,4,'Laptops');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (12,4,'Home Appliances');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (13,5,'Jewellery');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (14,5,'Sunglasses');
+INSERT INTO sub_category (sub_cat_id,category_id,sub_cat_name) VALUES (15,5,'Hair Accessories');
+
