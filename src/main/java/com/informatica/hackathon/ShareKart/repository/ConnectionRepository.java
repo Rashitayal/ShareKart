@@ -15,4 +15,7 @@ public interface ConnectionRepository  extends JpaRepository<Connection, Integer
     @Query("select c.to from Connection c where c.from.id = :profileId")
     List<Profile> findConnectionsForProfile(@Param("profileId") String profileId);
 
+    @Query("select c.to.id from Connection c where c.from.id = :profileId")
+    List<String> findConnectionsIdsForProfile(@Param("profileId") String profileId);
+
 }

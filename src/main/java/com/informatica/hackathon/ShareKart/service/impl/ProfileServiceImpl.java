@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ProfileServiceImpl implements ProfileService {
@@ -44,7 +46,7 @@ public class ProfileServiceImpl implements ProfileService {
             profile.setGender(genderLabel);
         }
 
-        if (profile.getLikesList().size() > 0) {
+        if (profile.getLikesList()!= null && profile.getLikesList().size() > 0) {
             profile.getLikesList().stream().forEach(e -> {
                         e.setProfile(profile);
                         if (e.getSubCategory() != null) {
@@ -56,7 +58,7 @@ public class ProfileServiceImpl implements ProfileService {
                     }
             );
         }
-        if (profile.getDislikesList().size() > 0) {
+        if (profile.getDislikesList()!= null && profile.getDislikesList().size() > 0) {
             profile.getDislikesList().stream().forEach(e -> {
                         e.setProfile(profile);
                         if (e.getSubCategory() != null) {
@@ -127,6 +129,16 @@ public class ProfileServiceImpl implements ProfileService {
         profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("profile", "profileId", profileId));
         profileRepository.deleteById(profileId);
+    }
+
+    @Override
+    public List<Profile> getAllProfile(String profileId) {
+        List<String> output = connectionRepository.findConnectionsIdsForProfile(profileId);
+        if(output==null || output.size()==0){
+            output=new ArrayList<>();
+            output.add(profileId);
+        }
+        return profileRepository.getUnconnectedProfile(output,profileId);
     }
 
 }
