@@ -3,18 +3,16 @@ package com.informatica.hackathon.ShareKart.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RecommendationRequest {
-    @JsonProperty("ProfileId")
-    private String ProfileId;
+    private String profileId;
 
-    @JsonProperty("searchInput")
     private String searchInput;
 
     public String getProfileId() {
-        return ProfileId;
+        return profileId;
     }
 
     public void setProfileId(String profileId) {
-        ProfileId = profileId;
+        this.profileId = profileId;
     }
 
     public String getSearchInput() {

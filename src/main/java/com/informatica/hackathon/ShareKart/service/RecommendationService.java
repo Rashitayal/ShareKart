@@ -40,9 +40,9 @@ public class RecommendationService {
 
         List<Product> likedList = filteredProductRecommendation
                 .searchRecommendationsByLikes(profileId, searchInputResponse.getSearchType(),
-                        searchInputResponse.getSearchIds());
+                        searchInputResponse.getSearchIds(), searchInput);
         List<Product> general = filteredProductRecommendation
-                .searchGeneral(profileId, searchInputResponse.getSearchType(), searchInputResponse.getSearchIds());
+                .searchGeneral(profileId, searchInputResponse.getSearchType(), searchInputResponse.getSearchIds(), searchInput);
         RecommendationResponse recommendationResponse = new RecommendationResponse();
         recommendationResponse.setLikes(likedList);
         recommendationResponse.setGeneral(general);

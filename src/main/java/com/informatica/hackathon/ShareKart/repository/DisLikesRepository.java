@@ -20,7 +20,7 @@ public interface DisLikesRepository extends JpaRepository<DisLikes, Integer>  {
     @Query("select dl from DisLikes dl JOIN dl.category c where dl.profile.id = :profileId and c.id IN :catId")
     List<DisLikes> findDislikesByProfileIdAndCatId(@Param("profileId") String profileId, @Param("catId") List<Integer> catId);
 
-    @Query("select sc.id from DisLikes dl JOIN dl.subCategory sc where dl.profile.id = :profileId and sc.id IN :subCatId")
+    @Query("select distinct dl.subCategory.id from DisLikes dl JOIN dl.subCategory sc where dl.profile.id = :profileId and sc.id IN :subCatId")
     List<Integer> findDislikesByProfileIdAndSubCatId(@Param("profileId") String profileId, @Param("subCatId") List<Integer> subCatId);
 
     @Query("select p.id from DisLikes dl JOIN dl.product p where dl.profile.id = :profileId and p.id IN :prodId")

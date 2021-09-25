@@ -1,5 +1,6 @@
 package com.informatica.hackathon.ShareKart.service.impl;
 
+import com.informatica.hackathon.ShareKart.model.Gender;
 import com.informatica.hackathon.ShareKart.model.Product;
 import com.informatica.hackathon.ShareKart.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class AllProductRecommendation {
         List<Integer> subcats = new ArrayList<>(likesRepository.findSubcatIdByProfileId(profileId));
         List<Integer> cats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
         //add product likes also
-        return searchRecommendations(cats, subcats, null, profileRepository.getGenderForProfile(profileId));
+        return searchRecommendations(cats, subcats, null, Gender.valueOf(profileRepository.getGenderForProfile(profileId)).value);
 
     }
 
@@ -87,7 +88,7 @@ public class AllProductRecommendation {
         List<Integer> likedCats = new ArrayList<>(likesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
-        return searchProductId(likedCats, likedSubcats, null, profileRepository.getGenderForProfile(profileId));
+        return searchProductId(likedCats, likedSubcats, null, Gender.valueOf(profileRepository.getGenderForProfile(profileId)).value);
     }
 
     public List<Integer> searchDislikedProductIds(String profileId) {
@@ -96,7 +97,7 @@ public class AllProductRecommendation {
         List<Integer> dislikedCats = new ArrayList<>(dislikesRepository.findCatIdByProfileId(profileId));
 
         //handle products also
-        return searchProductId(dislikedCats, dislikedSubcats, null, profileRepository.getGenderForProfile(profileId));
+        return searchProductId(dislikedCats, dislikedSubcats, null, Gender.valueOf(profileRepository.getGenderForProfile(profileId)).value);
 
     }
 
@@ -104,7 +105,7 @@ public class AllProductRecommendation {
         List<Integer> productsToExclude = new ArrayList<>();
         productsToExclude.addAll(searchDislikedProductIds(profileId));
         productsToExclude.addAll(searchLikedProductIds(profileId));
-        return productRepository.findProductsToExclude(productsToExclude);
+        return productRepository.findProductsToExclude(productsToExclude, Gender.valueOf(profileRepository.getGenderForProfile(profileId)).value);
     }
 
     //search by orderHistory

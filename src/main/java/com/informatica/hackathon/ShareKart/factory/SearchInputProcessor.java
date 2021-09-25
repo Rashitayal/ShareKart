@@ -1,5 +1,6 @@
 package com.informatica.hackathon.ShareKart.factory;
 
+import com.informatica.hackathon.ShareKart.model.Gender;
 import com.informatica.hackathon.ShareKart.model.SearchInputResponse;
 import com.informatica.hackathon.ShareKart.repository.CategoryRepository;
 import com.informatica.hackathon.ShareKart.repository.ProductRepository;
@@ -8,14 +9,12 @@ import com.informatica.hackathon.ShareKart.repository.SubCategoryRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.tomcat.util.json.JSONParser;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Locale;
 
 @Component
 public class SearchInputProcessor {
@@ -40,8 +39,8 @@ public class SearchInputProcessor {
 
         //input = input.toLowerCase(Locale.ROOT);
         HashMap<String, String> searchToBe = new HashMap<>();
-        searchToBe.put("butterscotch icecream", "product");
-        searchToBe.put("cake", "subcategory");
+        searchToBe.put("strawberry cake", "product");
+        searchToBe.put("cakes", "subcategory");
         searchToBe.put("tshirt", "product");
         searchToBe.put("red rose", "product");
         searchToBe.put("smartphone", "subcategory");
@@ -50,20 +49,26 @@ public class SearchInputProcessor {
         searchToBe.put("Saree", "product");
         searchToBe.put("Ethnic", "subcategory");
         searchToBe.put("Fashion", "category");
+        searchToBe.put("flowers", "category");
+        searchToBe.put("shakes", "subcategory");
+        searchToBe.put("icecreams", "subcategory");
+        searchToBe.put("white tulip", "product");
+        searchToBe.put("white orchid", "product");
 
         if (searchToBe.get(input).equals("product")) {
-            return new SearchInputResponse("product", productRepository.findProductsbyName(input, profileRepository.getGenderForProfile(profileId)));
+            return new SearchInputResponse("product", productRepository
+                    .findSubCatByProdName(input,
+                            Gender.valueOf(profileRepository.getGenderForProfile(profileId)).value));
         } else if (searchToBe.get(input).equals("subcategory")) {
-            return new SearchInputResponse("subcategory",subCategoryRepository.findSubcatByName(input));
-                    //productRepository.findProductIds(subCategoryRepository.findSubcatByName(input), profileRepository.getGenderForProfile(profileId)));
+            return new SearchInputResponse("subcategory", subCategoryRepository.findSubcatByName(input));
         } else if (searchToBe.get(input).equals("category")) {
-            return new SearchInputResponse("category", productRepository.findProductIds(subCategoryRepository
-                    .findSubcatByCatId(Arrays.asList(categoryRepository.findCatByCatId(input).getId())),profileRepository.getGenderForProfile(profileId)));
+            return new SearchInputResponse("category",
+                    Arrays.asList(categoryRepository.findCatByCatId(input).getId()));
         }
         return null;
     }
 
-    private String sendGetRequest(String url){
+    private String sendGetRequest(String url) {
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(url).build();
         try (Response response = client.newCall(request).execute()) {
@@ -72,9 +77,9 @@ public class SearchInputProcessor {
             JSONObject intents = jsonObject.getJSONObject("prediction").getJSONObject("intents");
             JSONObject entities = jsonObject.getJSONObject("prediction").getJSONObject("entities");
             String category = entities.get("Category").toString();
-            category.substring(3,category.length()-3);
+            category.substring(3, category.length() - 3);
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
         return null;
