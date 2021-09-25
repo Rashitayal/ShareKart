@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -21,7 +22,7 @@ public class Product {
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    String id;
+    Integer id;
 
     @Column(name = "price")
     String price;
@@ -35,8 +36,12 @@ public class Product {
     @Column(name = "name")
     String name;
 
-    @Column(name = "img_url")
+    @Lob
+    @Column(name="img_url", length=512)
     String imgUrl;
+
+    @Column(name="classification")
+    String classification;
 
     @JsonBackReference(value="subCategory")
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,11 +59,11 @@ public class Product {
     public Product() {
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -124,5 +129,13 @@ public class Product {
 
     public void setDislikesList(List<DisLikes> dislikesList) {
         this.dislikesList = dislikesList;
+    }
+
+    public String getClassification() {
+        return classification;
+    }
+
+    public void setClassification(String classification) {
+        this.classification = classification;
     }
 }

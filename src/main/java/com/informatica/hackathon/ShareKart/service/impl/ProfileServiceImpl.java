@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -132,7 +133,12 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Override
     public List<Profile> getAllProfile(String profileId) {
-        return profileRepository.getUnconnectedProfile(connectionRepository.findConnectionsIdsForProfile(profileId),profileId);
+        List<String> output = connectionRepository.findConnectionsIdsForProfile(profileId);
+        if(output==null || output.size()==0){
+            output=new ArrayList<>();
+            output.add(profileId);
+        }
+        return profileRepository.getUnconnectedProfile(output,profileId);
     }
 
 }
