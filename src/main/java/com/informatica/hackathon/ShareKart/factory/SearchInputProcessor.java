@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 
 @Component
 public class SearchInputProcessor {
@@ -38,6 +39,7 @@ public class SearchInputProcessor {
 //        String itemType = sendGetRequest(url);
 
         //input = input.toLowerCase(Locale.ROOT);
+        input = input.toLowerCase(Locale.ROOT);
         HashMap<String, String> searchToBe = new HashMap<>();
         searchToBe.put("strawberry cake", "product");
         searchToBe.put("cakes", "subcategory");
@@ -47,8 +49,8 @@ public class SearchInputProcessor {
         searchToBe.put("iphone 13", "product");
         searchToBe.put("gadgets", "category");
         searchToBe.put("Saree", "product");
-        searchToBe.put("Ethnic", "subcategory");
-        searchToBe.put("Fashion", "category");
+        searchToBe.put("ethnic", "subcategory");
+        searchToBe.put("fashion", "category");
         searchToBe.put("flowers", "category");
         searchToBe.put("shakes", "subcategory");
         searchToBe.put("icecreams", "subcategory");
