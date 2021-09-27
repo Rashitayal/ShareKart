@@ -3,6 +3,7 @@ package com.informatica.hackathon.ShareKart.controller;
 import com.informatica.hackathon.ShareKart.exception.InputValidator;
 import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.model.Profile;
+import com.informatica.hackathon.ShareKart.model.ProfileResponse;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,16 +34,17 @@ public class ProfileManagementController {
 
     @RequestMapping(value = "/{email}", method = RequestMethod.GET,
             consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Profile> getProfileByEmail(@PathVariable(value = "email") String email) {
-        return new ResponseEntity<Profile>(profileService.getProfileByEmail(email), HttpStatus.OK);
+    public ResponseEntity<ProfileResponse> getProfileByEmail(@PathVariable(value = "email") String email) {
+        ProfileResponse profile = profileService.getProfileByEmail(email);
+        return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{profileId}", method = RequestMethod.PUT,
             consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Profile> updateProfileById(@PathVariable(value = "profileId") String profileId,
+    public ResponseEntity<ProfileResponse> updateProfileById(@PathVariable(value = "profileId") String profileId,
                                                      @RequestBody Profile profile) throws InvalidRequestException {
         InputValidator.validateEmail(profile.getEmail());
-        return new ResponseEntity<Profile>(profileService.updateProfile(profile, profileId), HttpStatus.OK);
+        return new ResponseEntity<ProfileResponse>(profileService.updateProfile(profile, profileId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{profileId}", method = RequestMethod.DELETE,

@@ -2,8 +2,7 @@ package com.informatica.hackathon.ShareKart.service.impl;
 
 import com.informatica.hackathon.ShareKart.exception.InvalidRequestException;
 import com.informatica.hackathon.ShareKart.exception.ResourceNotFoundException;
-import com.informatica.hackathon.ShareKart.model.Gender;
-import com.informatica.hackathon.ShareKart.model.Profile;
+import com.informatica.hackathon.ShareKart.model.*;
 import com.informatica.hackathon.ShareKart.repository.*;
 import com.informatica.hackathon.ShareKart.service.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,16 +74,52 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public Profile getProfileByEmail(String email) {
+    public ProfileResponse getProfileByEmail(String email) {
         Profile p = profileRepository.findProfileByEmail(email);
-        if (p == null) {
-            throw new ResourceNotFoundException("profile", "email", email);
+        return getProfileResponse(p);
+    }
+
+    private ProfileResponse getProfileResponse(Profile p) {
+        p.setLikesList(likesRepository.findlikesByProfileId(p.getProfileId()));
+        p.setDislikesList(dislikesRepository.findDislikesByProfileId(p.getProfileId()));
+        ProfileResponse profileResponse = new ProfileResponse();
+        profileResponse.setEmail(p.getEmail());
+        profileResponse.setProfileId(p.getProfileId());
+        profileResponse.setDateOfBirth(p.getDateOfBirth());
+        profileResponse.setHeight(p.getHeight());
+        profileResponse.setFirstName(p.getFirstName());
+        profileResponse.setLastName(p.getLastName());
+        profileResponse.setGender(p.getGender());
+        List<Product> likesList = new ArrayList<>();
+        for (int i = 0; i< p.getLikesList().size(); i++){
+            Product product = new Product();
+            if(p.getLikesList().get(i).getSubCategory()!=null){
+                product.setName(p.getLikesList().get(i).getSubCategory().getName());
+                product.setLikesList(p.getLikesList());
+                likesList.add(product);
+            }
+
         }
-        return p;
+        profileResponse.setLikesList(likesList);
+
+        List<Product> disLikesList = new ArrayList<>();
+        for (int i = 0; i< p.getDislikesList().size(); i++){
+            Product product = new Product();
+            if(p.getDislikesList().get(i).getSubCategory()!=null) {
+                product.setName(p.getDislikesList().get(i).getSubCategory().getName());
+                product.setDislikesList(p.getDislikesList());
+                disLikesList.add(product);
+            }
+
+        }
+        profileResponse.setDislikesList(disLikesList);
+        profileResponse.setConnectedFrom(p.getConnectedFrom());
+        profileResponse.setConnectedTo(p.getConnectedTo());
+        return profileResponse;
     }
 
     @Override
-    public Profile updateProfile(Profile profile, String profileId) {
+    public ProfileResponse updateProfile(Profile profile, String profileId) {
         Profile p = profileRepository.findById(profileId)
                 .orElseThrow(() -> new ResourceNotFoundException("profile", "profileId", profileId));
         Profile pByEmail = profileRepository.findProfileByEmail(profile.getEmail());
@@ -125,7 +160,8 @@ public class ProfileServiceImpl implements ProfileService {
                     }
             );
         }
-        return profileRepository.save(profile);
+        Profile profile1 = profileRepository.save(profile);
+        return getProfileResponse(profile1);
     }
 
     @Override

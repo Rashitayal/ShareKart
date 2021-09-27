@@ -31,4 +31,7 @@ public interface LikesRepository extends JpaRepository<Likes, Integer> {
     @Query("delete from Likes l where l.profile.id = :profileId and (l.category.id is not null or l.subCategory.id is not null)")
     int clearCategorySubCategoryByProfileId(@Param("profileId") String profileId);
 
+    @Query("select l from Likes l where l.profile.id = :profileId")
+    List<Likes> findlikesByProfileId(@Param("profileId") String profileId);
+
 }
